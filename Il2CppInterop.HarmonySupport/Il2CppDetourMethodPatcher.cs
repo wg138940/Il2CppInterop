@@ -270,7 +270,7 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
             unmanagedParams
         );
 
-        var il = dmd.GetILGenerator();
+        var il = new CecilILGenerator(dmd.Definition.Body.GetILProcessor()).GetProxy();
         il.BeginExceptionBlock();
 
         // Declare a list of variables to dereference back to the original pointers.
