@@ -28,6 +28,12 @@ public static class XrefScannerLowLevel
             if (instruction.FlowControl == FlowControl.UnconditionalBranch ||
                 instruction.FlowControl == FlowControl.Call)
             {
+                // call $+5
+                if (NativeExtensions.TargetProcessIs64Bit
+                        ? ExtractTargetAddress(in instruction) == instruction.NextIP
+                        : ExtractTargetAddress(in instruction) == instruction.NextIP32)
+                    continue;
+
                 // We hope and pray that the compiler didn't use short jumps for any function calls
                 if (!instruction.IsJmpShort)
                 {
