@@ -91,12 +91,12 @@ public static class XrefScanner
                 {
                     if (instruction.Op1Kind == OpKind.Memory && instruction.IsIPRelativeMemoryOperand)
                     {
-                        var movTarget = (IntPtr)instruction.IPRelativeMemoryAddress;
+                        var movTarget = instruction.IPRelativeMemoryAddress.ToIntPtrChecked();
                         if (instruction.MemorySize != MemorySize.UInt64)
                             continue;
 
                         if (skipClassCheck || XrefScannerManager.Impl.XrefGlobalClassFilter(movTarget))
-                            result = new XrefInstance(XrefType.Global, movTarget, (IntPtr)instruction.IP);
+                            result = new XrefInstance(XrefType.Global, movTarget, instruction.IP.ToIntPtrChecked());
                     }
                 }
                 catch (Exception ex)

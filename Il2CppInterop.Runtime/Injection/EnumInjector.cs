@@ -225,7 +225,7 @@ public static unsafe class EnumInjector
         il2cppEnum.Namespace = Marshal.StringToHGlobalAnsi(type.Namespace ?? string.Empty);
 
         var token = InjectorHelpers.CreateClassToken(il2cppEnum.Pointer);
-        il2cppEnum.ThisArg.Data = il2cppEnum.ByValArg.Data = (IntPtr)token;
+        il2cppEnum.ThisArg.Data = il2cppEnum.ByValArg.Data = token.ToIntPtrChecked();
 
         // Has to be IL2CPP_TYPE_VALUETYPE because IL2CPP_TYPE_ENUM isn't used
         il2cppEnum.ThisArg.Type = il2cppEnum.ByValArg.Type = Il2CppTypeEnum.IL2CPP_TYPE_VALUETYPE;

@@ -31,7 +31,7 @@ public static class XrefScannerLowLevel
                 // We hope and pray that the compiler didn't use short jumps for any function calls
                 if (!instruction.IsJmpShort)
                 {
-                    yield return (IntPtr)ExtractTargetAddress(in instruction);
+                    yield return ExtractTargetAddress(in instruction).ToIntPtrChecked();
                     if (firstFlowControl && instruction.FlowControl == FlowControl.UnconditionalBranch) yield break;
                 }
             }
@@ -65,7 +65,7 @@ public static class XrefScannerLowLevel
             {
                 var targetAddress = XrefScanner.ExtractTargetAddress(instruction);
                 if (targetAddress != 0)
-                    yield return (IntPtr)targetAddress;
+                    yield return targetAddress.ToIntPtrChecked();
                 continue;
             }
 
@@ -74,7 +74,7 @@ public static class XrefScannerLowLevel
                 {
                     var targetAddress = instruction.IPRelativeMemoryAddress;
                     if (targetAddress != 0)
-                        yield return (IntPtr)targetAddress;
+                        yield return targetAddress.ToIntPtrChecked();
                 }
         }
     }

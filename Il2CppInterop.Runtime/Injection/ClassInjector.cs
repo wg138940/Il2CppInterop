@@ -516,7 +516,7 @@ public static unsafe partial class ClassInjector
         classPointer.TypeHierarchy[TypeHierarchyDepth - 1] = classPointer.ClassPointer;
 
         classPointer.ByValArg.Data =
-            classPointer.ThisArg.Data = (IntPtr)InjectorHelpers.CreateClassToken(classPointer.Pointer);
+            classPointer.ThisArg.Data = InjectorHelpers.CreateClassToken(classPointer.Pointer).ToIntPtrChecked();
 
         RuntimeSpecificsStore.SetClassInfo(classPointer.Pointer, true);
         Il2CppClassPointerStore.SetNativeClassPointer(type, classPointer.Pointer);

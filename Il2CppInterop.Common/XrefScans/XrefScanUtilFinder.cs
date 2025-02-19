@@ -26,7 +26,7 @@ internal static class XrefScanUtilFinder
             if (instruction.Mnemonic == Mnemonic.Call)
             {
                 var target = ExtractTargetAddress(instruction);
-                if ((IntPtr)target == callTarget)
+                if (target.ToIntPtrChecked() == callTarget)
                     return lastRcxRead;
             }
 
@@ -34,7 +34,7 @@ internal static class XrefScanUtilFinder
                 if (instruction.Op0Kind == OpKind.Register && instruction.Op0Register == Register.ECX &&
                     instruction.Op1Kind == OpKind.Memory && instruction.IsIPRelativeMemoryOperand)
                 {
-                    var movTarget = (IntPtr)instruction.IPRelativeMemoryAddress;
+                    var movTarget = instruction.IPRelativeMemoryAddress.ToIntPtrChecked();
                     if (instruction.MemorySize != MemorySize.UInt32 && instruction.MemorySize != MemorySize.Int32)
                         continue;
 
@@ -65,14 +65,14 @@ internal static class XrefScanUtilFinder
             if (instruction.Mnemonic == Mnemonic.Call)
             {
                 var target = ExtractTargetAddress(instruction);
-                if ((IntPtr)target == callTarget)
+                if (target.ToIntPtrChecked() == callTarget)
                     seenCall = true;
             }
 
             if (instruction.Mnemonic == Mnemonic.Mov && seenCall)
                 if (instruction.Op0Kind == OpKind.Memory && (instruction.MemorySize == MemorySize.Int8 ||
                                                              instruction.MemorySize == MemorySize.UInt8))
-                    return (IntPtr)instruction.IPRelativeMemoryAddress;
+                    return instruction.IPRelativeMemoryAddress.ToIntPtrChecked();
         }
     }
 

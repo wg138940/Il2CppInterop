@@ -106,7 +106,9 @@ public class MethodXrefScanCache : IDisposable
 
         public XrefInstance AsXrefInstance(long baseAddress)
         {
-            return new XrefInstance(Type, (IntPtr)(baseAddress + Address), (IntPtr)(baseAddress + FoundAt));
+            return new XrefInstance(Type,
+                (baseAddress + Address).ToIntPtrChecked(),
+                (baseAddress + FoundAt).ToIntPtrChecked());
         }
 
         public static MethodData FromXrefInstance(XrefInstance instance)
