@@ -57,6 +57,9 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
     };
 
     private static readonly List<object> DelegateCache = new();
+
+    private static bool? unityVersionIsBelow201830;
+
     private INativeMethodInfoStruct modifiedNativeMethodInfo;
 
     private IDetour nativeDetour;
@@ -234,7 +237,10 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
             paramStartIndex++;
         }
 
-        if (!Original.IsStatic)
+        unityVersionIsBelow201830 ??= Il2CppInteropRuntime.Instance.UnityVersion < new Version(2018, 3, 0);
+        var hasThisArg = !Original.IsStatic || unityVersionIsBelow201830 is true;
+
+        if (hasThisArg)
         {
             paramStartIndex++;
         }
@@ -250,7 +256,7 @@ internal unsafe class Il2CppDetourMethodPatcher : MethodPatcher
             unmanagedParams[0] = typeof(IntPtr);
         }
 
-        if (!Original.IsStatic)
+        if (hasThisArg)
         {
             unmanagedParams[paramStartIndex - 1] = typeof(IntPtr);
         }
