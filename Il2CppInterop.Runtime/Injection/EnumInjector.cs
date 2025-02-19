@@ -86,10 +86,10 @@ public static unsafe class EnumInjector
         il2cppEnum.FieldCount = (ushort)newFieldCount;
         il2cppEnum.Fields = newFields;
 
-        var runtimeEnumType = Il2CppType.TypeFromPointer(enumPtr).TryCast<RuntimeType>();
-        if (runtimeEnumType != null)
-            // The mono runtime caches the enum names and values the first time they are requested, so we reset this cache
-            runtimeEnumType.GenericCache = null;
+        // var runtimeEnumType = Il2CppType.TypeFromPointer(enumPtr).TryCast<RuntimeType>();
+        // if (runtimeEnumType != null)
+        //     // The mono runtime caches the enum names and values the first time they are requested, so we reset this cache
+        //     runtimeEnumType.GenericCache = null;
     }
 
     private static int GetEnumElementSize(Il2CppTypeEnum type)
