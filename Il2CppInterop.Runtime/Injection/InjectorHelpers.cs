@@ -57,7 +57,14 @@ namespace Il2CppInterop.Runtime.Injection
 
             InjectedAssembly.Name.Name = Marshal.StringToHGlobalAnsi("InjectedMonoTypes");
 
-            InjectedImage.Assembly = InjectedAssembly.AssemblyPointer;
+            try
+            {
+                InjectedImage.Assembly = InjectedAssembly.AssemblyPointer;
+            }
+            catch (NotSupportedException)
+            {
+                Logger.Instance.LogWarning("AssemblyPointer is not supported, skipping");
+            }
             InjectedImage.Dynamic = 1;
             InjectedImage.Name = InjectedAssembly.Name.Name;
             if (InjectedImage.HasNameNoExt)
