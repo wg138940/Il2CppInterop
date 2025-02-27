@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Il2CppInterop.Common;
@@ -40,22 +41,25 @@ namespace Il2CppInterop.Runtime.Injection.Hooks
             return Original(gmethod, copyMethodPtr);
         }
 
-        private static readonly MemoryUtils.SignatureDefinition[] s_Signatures =
+        private static IEnumerable<MemoryUtils.SignatureDefinition> GetSignatures()
         {
+            if (PlatformUtils.IsAndroid)
+                yield break;
+
             // Unity 2021.2.5 (x64)
-            new MemoryUtils.SignatureDefinition
+            yield return new MemoryUtils.SignatureDefinition
             {
                 pattern = "\x48\x89\x5C\x24\x08\x48\x89\x6C\x24\x10\x56\x57\x41\x54\x41\x56\x41\x57\x48\x81\xEC\xB0\x00",
                 mask = "xxxxxxxxxxxxxxxxxxxxxxx",
                 xref = false
-            }
-        };
+            };
+        }
 
         public override IntPtr FindTargetMethod()
         {
             // On Unity 2021.2+, the 3 parameter shim can be inlined and optimized by the compiler
             // which moves the method we're looking for
-            var genericMethodGetMethod = s_Signatures
+            var genericMethodGetMethod = GetSignatures()
                 .Select(s => MemoryUtils.FindSignatureInModule(InjectorHelpers.Il2CppModule, s))
                 .FirstOrDefault(p => p != 0);
 
