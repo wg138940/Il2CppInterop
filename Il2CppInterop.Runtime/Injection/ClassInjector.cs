@@ -1114,7 +1114,6 @@ public static unsafe partial class ClassInjector
     private static string GetIl2CppTypeFullName(Il2CppTypeStruct* typePointer)
     {
         var klass = UnityVersionHandler.Wrap((Il2CppClass*)IL2CPP.il2cpp_class_from_type((IntPtr)typePointer));
-        var assembly = UnityVersionHandler.Wrap(UnityVersionHandler.Wrap(klass.Image).Assembly);
 
         var fullName = new StringBuilder();
 
@@ -1134,7 +1133,7 @@ public static unsafe partial class ClassInjector
 
         fullName.Append(Marshal.PtrToStringAnsi(klass.Name));
 
-        var assemblyName = Marshal.PtrToStringAnsi(assembly.Name.Name);
+        var assemblyName = Marshal.PtrToStringAnsi(UnityVersionHandler.Wrap(klass.Image).NameNoExt);
         if (assemblyName != "mscorlib")
         {
             fullName.Append(", ");
